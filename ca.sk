@@ -1,0 +1,45 @@
+variables:
+    {slot.ca} =0
+    {is.%player%.ig}=0
+    {ca.start}=false
+    {ca.%player%.kill}=0
+#============================================
+#Les effets
+#============================================
+on death of chicken:
+    add 1 to {ca.%player%.kill}
+    send "<yellow>[Chicken attack]<light red>Vous venez de marquer un point" to player
+ loop 20000 times:
+    if {ca.%player%.kill} is greater than 1
+    broadcast "<yellow>[Chicken attack]<light red>%player% vient de gagner la partie"
+ loop 20000 times:
+    if {ca.started} is true:
+    broadcast "<yellow>[Chicken attack]<light red>Vague de poulet!"
+    heal player
+    spawn 20 chickens at {ca.spawn}
+#===========================================
+#Les commandes
+#===========================================
+command /ca <text>:
+    description: Chicken Attack
+    usage: /ca help pour toute l'aide
+    trigger:
+        argument 1 is "setlobby":
+        set {ca.spawn} to location of player
+        argument 1 is "help":
+            message "<light green>/ca join pour rejoindre la partie"
+        message "<light green>/ca leave pour quitter la partie"
+        argument 1 is "join":
+        if {slot.ca} is greater than 4:
+        message "<yellow>[Chicken Attack] <light red>Le jeu est complet, patientez jusqu'a la prochaine partie"
+        stop
+        if {ca.start} is true:
+        message "<yellow>[Chicken Attack] <light red>La partie a déja commencer"
+        stop
+        add 1 to {slot.ca}
+        teleport player to {ca.spawn}
+        give a bow of infinity 1 to the player
+        argument 1 is "start":
+        broadcast "<yellow>[Chicken Attack] <light red>Le jeu démarre"
+        set {ca.start} to true
+          
