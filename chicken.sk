@@ -1,0 +1,43 @@
+variables:
+	{ca.start}=false
+	{ca.slot}=0
+#_________________________
+#Les effets              |
+#_________________________
+on death of chicken:
+	attacker is a player
+	add 1 to {ca.%player%.kill}
+every second:
+	loop all players:
+		if {ca.%player%.kill} is equal to 2:
+			broadcast "<yellow>[Chicken attack]<light red>TEST vient de gagner la partie"
+			set {ca.start} to false
+on skript load:
+	loop all players:
+		set {ca.%player%.kill} to 0
+#________________________
+#Les commandes          |
+#________________________
+command /chickenattack <text>:
+	description: Toute l'aide a propos de Chickens Attack
+	usage: /ca help si vous etes perdu
+	aliases: /ca
+	trigger:
+		argument 1 is "setlobby":
+			set {ca.spawn} to location of player
+		argument 1 is "join":
+			if {ca.slot} is equal to 2:
+			message "<yellow>[Chicken attack]<light red>Partit full"
+			stop
+			teleport the player to {ca.spawn}
+			message "<yellow>[Chicken attack]<light red>Vous etes en jeu"
+			add 1 to {ca.slot}
+		argument 1 is "help":
+			message "<light green>/ca join pour rejoindre la partie"
+			message "<light green>/ca leave pour quitter la partie"
+		argument 1 is "start":
+			broadcast "<yellow>[Chicken Attack] <light red>Le jeu démarre"
+			set {ca.start} to true
+			spawn 20 chickens at {ca.spawn}
+		
+		
